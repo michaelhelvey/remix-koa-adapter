@@ -28,6 +28,8 @@ jobs:
                   cache: 'pnpm'
             - name: Install dependencies
               run: pnpm install
+            - run: pnpm build
+            - run: (cd ./playground; pnpm install)
             - run: pnpm lint
             - run: pnpm typecheck
             - run: pnpm test

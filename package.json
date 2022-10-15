@@ -1,30 +1,42 @@
 {
 	"name": "remix-koa-adapter",
-	"version": "1.0.0",
+	"version": "0.0.1",
 	"description": "Koa request server handler for Remix",
-	"homepage": "https://github.com/michaelhelvey/remix-koa-adapter",
-	"sideEffects": false,
+	"homepage": "https://github.com/michaelhelvey/remix-koa-adapter#readme",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/michaelhelvey/remix-koa-adapter.git"
+	},
 	"type": "module",
 	"types": "./dist/index.d.ts",
+	"files": [
+		"dist",
+		"package.json",
+		"README.md",
+		"LICENSE"
+	],
 	"exports": {
+		"./package.json": "./package.json",
 		".": {
 			"require": "./dist/index.cjs",
-			"import": "./dist/index.js"
+			"types": "./dist/index.d.ts"
 		}
 	},
 	"scripts": {
-		"start": "node ./dist/index.js",
-		"dev": "tsx ./src/index.ts",
+		"dev": "(cd playground; pnpm dev)",
 		"test": "vitest",
 		"test:coverage": "vitest --coverage",
 		"lint": "eslint src --cache --ext .js,.jsx,.ts,.tsx",
-		"build": "tsup-node ./src/index.ts --format esm,cjs --dts --target=es2021 --clean",
+		"build": "tsup-node ./src/index.ts --format cjs --dts --target=es2021 --clean",
 		"format": "prettier --write src/**/*.ts",
 		"typecheck": "tsc --noEmit",
 		"validate": "pnpm lint && pnpm test -- run && pnpm typecheck && pnpm build",
 		"prepare": "husky install"
 	},
-	"keywords": [],
+	"keywords": [
+		"remix",
+		"koa"
+	],
 	"author": {
 		"name": "Michael Helvey",
 		"email": "michael.helvey1@gmail.com",
@@ -39,7 +51,13 @@
 		"*.{js,jsx,ts,tsx}": "eslint --cache --fix",
 		"*.{ts,js,json}": "prettier --write"
 	},
+	"peerDependencies": {
+		"@remix-run/node": ">=1.7",
+		"koa": ">=2"
+	},
 	"devDependencies": {
+		"@remix-run/node": "^1.7.2",
+		"@remix-run/server-runtime": "^1.7.2",
 		"@types/koa": "^2.13.5",
 		"@types/node": "^18.7.23",
 		"@typescript-eslint/eslint-plugin": "^5.38.1",
@@ -53,6 +71,8 @@
 		"koa": "^2.13.4",
 		"lint-staged": "^13.0.3",
 		"prettier": "^2.7.1",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
 		"tsup": "^6.2.3",
 		"tsx": "^3.9.0",
 		"typescript": "4.8.4",
