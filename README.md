@@ -13,6 +13,32 @@ of [@remix-run/express](https://github.com/remix-run/remix/tree/main/packages/re
 The package exports a Remix server adapter with a `createRequestHandler`
 function. For more information on using Remix server adapters, please refer to the [Remix documentation](https://remix.run/docs/en/v1/other-api/adapter).
 
+**Usage Example:**
+
+```ts
+import Koa from 'koa'
+import serve from 'koa-static'
+import path from 'path'
+import { createRequestHandler } from 'remix-koa-adapter'
+
+const app = new Koa()
+
+const BUILD_DIR = path.join(process.cwd(), 'build')
+
+app.use(serve('public'))
+
+app.use(
+	createRequestHandler({
+		build: require(BUILD_DIR),
+	})
+)
+
+const port = process.env.PORT ?? 3000
+app.listen(port, () => {
+	console.log(`✅ App listening on port ${port}`)
+})
+```
+
 ## Contributing & Local Development
 
 -   `pnpm dev` Run minimal remix example against the adapter.

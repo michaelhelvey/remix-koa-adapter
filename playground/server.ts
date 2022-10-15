@@ -1,12 +1,14 @@
 import { ServerBuild } from '@remix-run/server-runtime'
 import Koa from 'koa'
+import serve from 'koa-static'
 import path from 'path'
 import { createRequestHandler } from 'remix-koa-adapter'
 
 const app = new Koa()
 
 const BUILD_DIR = path.join(process.cwd(), 'build')
-console.log('Resolved build dir to', BUILD_DIR)
+
+app.use(serve('public'))
 
 app.use(
 	createRequestHandler({
