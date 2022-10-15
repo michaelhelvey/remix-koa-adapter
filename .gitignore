@@ -1,0 +1,11 @@
+node_modules
+dist
+build
+.cache
+.eslintcache
+
+coverage
+
+.vim
+.vscode
+.nvimrc

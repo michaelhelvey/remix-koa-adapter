@@ -1,0 +1,63 @@
+{
+	"name": "remix-koa-adapter",
+	"version": "1.0.0",
+	"description": "Koa request server handler for Remix",
+	"homepage": "https://github.com/michaelhelvey/remix-koa-adapter",
+	"sideEffects": false,
+	"type": "module",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"require": "./dist/index.cjs",
+			"import": "./dist/index.js"
+		}
+	},
+	"scripts": {
+		"start": "node ./dist/index.js",
+		"dev": "tsx ./src/index.ts",
+		"test": "vitest",
+		"test:coverage": "vitest --coverage",
+		"lint": "eslint src --cache --ext .js,.jsx,.ts,.tsx",
+		"build": "tsup-node ./src/index.ts --format esm,cjs --dts --target=es2021 --clean",
+		"format": "prettier --write src/**/*.ts",
+		"typecheck": "tsc --noEmit",
+		"validate": "pnpm lint && pnpm test -- run && pnpm typecheck && pnpm build",
+		"prepare": "husky install"
+	},
+	"keywords": [],
+	"author": {
+		"name": "Michael Helvey",
+		"email": "michael.helvey1@gmail.com",
+		"url": "https://michaelhelvey.dev"
+	},
+	"license": "MIT",
+	"engines": {
+		"node": ">=16.0.0"
+	},
+	"lint-staged": {
+		"src/**/*.ts": "prettier --write",
+		"*.{js,jsx,ts,tsx}": "eslint --cache --fix",
+		"*.{ts,js,json}": "prettier --write"
+	},
+	"devDependencies": {
+		"@types/koa": "^2.13.5",
+		"@types/node": "^18.7.23",
+		"@typescript-eslint/eslint-plugin": "^5.38.1",
+		"@typescript-eslint/parser": "^5.38.1",
+		"@vitest/coverage-c8": "^0.23.4",
+		"eslint": "^8.24.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-jest": "^27.0.4",
+		"eslint-plugin-node": "^11.1.0",
+		"husky": "^8.0.1",
+		"koa": "^2.13.4",
+		"lint-staged": "^13.0.3",
+		"prettier": "^2.7.1",
+		"tsup": "^6.2.3",
+		"tsx": "^3.9.0",
+		"typescript": "4.8.4",
+		"vite": "^3.1.4",
+		"vite-tsconfig-paths": "^3.5.1",
+		"vitest": "^0.23.4"
+	}
+}
