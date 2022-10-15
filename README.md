@@ -10,7 +10,7 @@ of [@remix-run/express](https://github.com/remix-run/remix/tree/main/packages/re
 
 ## Installation & Usage
 
--   `pnpm add remix-adapter-koa`
+-   `npm install remix-koa-adapter` (or use pnpm, yarn, etc)
 
 The package exports a Remix server adapter with a `createRequestHandler`
 function. For more information on using Remix server adapters, please refer to the [Remix documentation](https://remix.run/docs/en/v1/other-api/adapter).
