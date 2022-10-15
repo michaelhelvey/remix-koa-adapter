@@ -1,6 +1,8 @@
 # remix-koa-adapter
 
 ![build](https://github.com/michaelhelvey/remix-koa-adapter/actions/workflows/nodejs.yml/badge.svg)
+[![npm version](https://badge.fury.io/js/remix-koa-adapter.svg)](https://badge.fury.io/js/remix-koa-adapter)
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 
 This is a server adapter for using [koa](https://koajs.com) with the
 [Remix](https:/remix.run) framework. It is more or less a straight-forward port
