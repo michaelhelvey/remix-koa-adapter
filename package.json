@@ -1,6 +1,6 @@
 {
 	"name": "remix-koa-adapter",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Koa request server handler for Remix",
 	"homepage": "https://github.com/michaelhelvey/remix-koa-adapter#readme",
 	"repository": {
@@ -19,6 +19,7 @@
 		"./package.json": "./package.json",
 		".": {
 			"require": "./dist/index.cjs",
+			"import": "./dist/index.js",
 			"types": "./dist/index.d.ts"
 		}
 	},
@@ -27,7 +28,7 @@
 		"test": "vitest",
 		"test:coverage": "vitest --coverage",
 		"lint": "eslint src --cache --ext .js,.jsx,.ts,.tsx",
-		"build": "tsup-node ./src/index.ts --format cjs --dts --target=es2021 --clean",
+		"build": "tsup-node ./src/index.ts --format cjs,esm --dts --target=es2021 --clean",
 		"format": "prettier --write src/**/*.ts",
 		"typecheck": "tsc --noEmit",
 		"validate": "pnpm lint && pnpm test -- run && pnpm typecheck && pnpm build",
