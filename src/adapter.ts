@@ -23,7 +23,7 @@ import type * as koa from 'koa'
  */
 export type GetLoadContextFunction = (ctx: koa.Context) => AppLoadContext
 
-export type RequestHandler = (ctx: koa.Context) => Promise<void>
+export type RequestHandler = koa.Middleware
 
 export type RequestHandlerBuilderArgs = {
 	build: ServerBuild
@@ -43,7 +43,7 @@ export function createRequestHandler({
 }: RequestHandlerBuilderArgs): RequestHandler {
 	const handleRequest = createRemixRequestHandler(build, mode)
 
-	return async (ctx) => {
+	return async function remixMiddleware(ctx, next) {
 		const request = createRemixRequest(ctx)
 		const loadContext = getLoadContext?.(ctx)
 
@@ -53,6 +53,8 @@ export function createRequestHandler({
 		)) as NodeResponse
 
 		await sendRemixResponse(ctx, response)
+
+		return next()
 	}
 }
 
