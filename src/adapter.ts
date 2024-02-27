@@ -1,14 +1,7 @@
-import type {
-	AppLoadContext,
-	RequestInit as NodeRequestInit,
-	Response as NodeResponse,
-	ServerBuild,
-} from '@remix-run/node'
+import type { AppLoadContext, ServerBuild } from '@remix-run/node'
 import {
-	AbortController as NodeAbortController,
 	createRequestHandler as createRemixRequestHandler,
-	Headers as RemixHeaders,
-	Request as RemixRequest,
+	createReadableStreamFromReadable,
 	writeReadableStreamToWritable,
 } from '@remix-run/node'
 import type * as koa from 'koa'
@@ -43,14 +36,11 @@ export function createRequestHandler({
 }: RequestHandlerBuilderArgs): RequestHandler {
 	const handleRequest = createRemixRequestHandler(build, mode)
 
-	return async function remixMiddleware(ctx, next) {
+	return async (ctx, next) => {
 		const request = createRemixRequest(ctx)
 		const loadContext = getLoadContext?.(ctx)
 
-		const response = (await handleRequest(
-			request,
-			loadContext
-		)) as NodeResponse
+		const response = await handleRequest(request, loadContext)
 
 		await sendRemixResponse(ctx, response)
 
@@ -60,8 +50,8 @@ export function createRequestHandler({
 
 export function createRemixHeaders(
 	requestHeaders: koa.Request['headers']
-): RemixHeaders {
-	const headers = new RemixHeaders()
+): Headers {
+	const headers = new Headers()
 
 	for (const [key, values] of Object.entries(requestHeaders)) {
 		if (values) {
@@ -78,43 +68,38 @@ export function createRemixHeaders(
 	return headers
 }
 
-export function createRemixRequest(ctx: koa.Context): RemixRequest {
+export function createRemixRequest(ctx: koa.Context): Request {
 	const origin = `${ctx.protocol}://${ctx.host}`
 	const url = new URL(ctx.url, origin)
 
 	// Abort action/loaders once we can no longer write a response
-	const controller = new NodeAbortController()
+	const controller = new AbortController()
 	ctx.res.on('close', () => controller.abort())
 
-	const init: NodeRequestInit = {
+	const init: RequestInit = {
 		method: ctx.method,
 		headers: createRemixHeaders(ctx.headers),
 		// Cast until reason/throwIfAborted added
 		// https://github.com/mysticatea/abort-controller/issues/36
-		signal: controller.signal as Exclude<
-			NodeRequestInit['signal'],
-			undefined
-		>,
+		signal: controller.signal,
 	}
 
 	if (ctx.method !== 'GET' && ctx.method !== 'HEAD') {
-		init.body = ctx.req
+		init.body = createReadableStreamFromReadable(ctx.req)
 	}
 
-	return new RemixRequest(url.href, init)
+	return new Request(url.href, init)
 }
 
 export async function sendRemixResponse(
 	ctx: koa.Context, // write to
-	nodeResponse: NodeResponse // read from
+	nodeResponse: Response // read from
 ): Promise<void> {
 	ctx.status = nodeResponse.status
 	ctx.message = nodeResponse.statusText
 
-	for (const [key, values] of Object.entries(nodeResponse.headers.raw())) {
-		for (const value of values) {
-			ctx.append(key, value)
-		}
+	for (const [key, value] of nodeResponse.headers.entries()) {
+		ctx.append(key, value)
 	}
 
 	if (nodeResponse.body) {
