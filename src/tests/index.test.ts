@@ -145,8 +145,8 @@ describe('createRequestHandler', () => {
 	})
 })
 
-describe('express createRemixHeaders', () => {
-	describe('creates fetch headers from express headers', () => {
+describe('koa createRemixHeaders', () => {
+	describe('creates fetch headers from koa headers', () => {
 		it('handles empty headers', () => {
 			const headers = createRemixHeaders({})
 			expect(Object.fromEntries(headers.entries())).toMatchInlineSnapshot(
