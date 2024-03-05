@@ -148,42 +148,45 @@ describe('createRequestHandler', () => {
 describe('koa createRemixHeaders', () => {
 	describe('creates fetch headers from koa headers', () => {
 		it('handles empty headers', () => {
-			expect(createRemixHeaders({})).toMatchInlineSnapshot(`Headers {}`)
+			const headers = createRemixHeaders({})
+			expect(Object.fromEntries(headers.entries())).toMatchInlineSnapshot(
+				`{}`
+			)
 		})
 
 		it('handles simple headers', () => {
-			expect(
-				createRemixHeaders({ 'x-foo': 'bar' })
-			).toMatchInlineSnapshot(`Headers {}`)
+			const headers = createRemixHeaders({ 'x-foo': 'bar' })
+			expect(headers.get('x-foo')).toBe('bar')
 		})
 
 		it('handles multiple headers', () => {
-			expect(
-				createRemixHeaders({ 'x-foo': 'bar', 'x-bar': 'baz' })
-			).toMatchInlineSnapshot(`Headers {}`)
+			const headers = createRemixHeaders({
+				'x-foo': 'bar',
+				'x-bar': 'baz',
+			})
+			expect(headers.get('x-foo')).toBe('bar')
+			expect(headers.get('x-bar')).toBe('baz')
 		})
 
 		it('handles headers with multiple values', () => {
-			expect(
-				createRemixHeaders({ 'x-foo': 'bar, baz' })
-			).toMatchInlineSnapshot(`Headers {}`)
-		})
-
-		it('handles headers with multiple values and multiple headers', () => {
-			expect(
-				createRemixHeaders({ 'x-foo': 'bar, baz', 'x-bar': 'baz' })
-			).toMatchInlineSnapshot(`Headers {}`)
+			const headers = createRemixHeaders({
+				'x-foo': ['bar', 'baz'],
+				'x-bar': 'baz',
+			})
+			expect(headers.get('x-foo')).toEqual('bar, baz')
+			expect(headers.get('x-bar')).toBe('baz')
 		})
 
 		it('handles multiple set-cookie headers', () => {
-			expect(
-				createRemixHeaders({
-					'set-cookie': [
-						'__session=some_value; Path=/; Secure; HttpOnly; MaxAge=7200; SameSite=Lax',
-						'__other=some_other_value; Path=/; Secure; HttpOnly; MaxAge=3600; SameSite=Lax',
-					],
-				})
-			).toMatchInlineSnapshot(`Headers {}`)
+			const headers = createRemixHeaders({
+				'set-cookie': [
+					'__session=some_value; Path=/; Secure; HttpOnly; MaxAge=7200; SameSite=Lax',
+					'__other=some_other_value; Path=/; Secure; HttpOnly; Expires=Wed, 21 Oct 2015 07:28:00 GMT; SameSite=Lax',
+				],
+			})
+			expect(headers.get('set-cookie')).toEqual(
+				'__session=some_value; Path=/; Secure; HttpOnly; MaxAge=7200; SameSite=Lax, __other=some_other_value; Path=/; Secure; HttpOnly; Expires=Wed, 21 Oct 2015 07:28:00 GMT; SameSite=Lax'
+			)
 		})
 	})
 })

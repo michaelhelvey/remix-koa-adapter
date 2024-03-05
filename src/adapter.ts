@@ -27,7 +27,7 @@ export type RequestHandlerBuilderArgs = {
 /**
  * Returns a request handler for koa that serves the response using Remix.
  *
- * @see https://remix.run/docs/en/v1/other-api/adapter
+ * @see hhttps://remix.run/docs/en/main/other-api/adapter
  */
 export function createRequestHandler({
 	build,
