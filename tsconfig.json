@@ -3,19 +3,20 @@
 		"types": ["vitest/globals"],
 		"target": "ES2020",
 		"strict": true,
-		"module": "CommonJS",
-		"moduleResolution": "Node",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
 		"noUncheckedIndexedAccess": true,
 		"exactOptionalPropertyTypes": true,
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
 		"noEmit": true,
+		"jsx": "react-jsx",
 		"preserveSymlinks": true,
 		"baseUrl": ".",
 		"paths": {
 			"~/*": ["./src/*"]
 		}
 	},
-	"include": ["**/*.ts", "**/*.js", "*.js", "*.ts", "*.cts"]
+	"include": ["**/*.ts", "**/*.tsx"]
 }

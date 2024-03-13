@@ -1,7 +1,7 @@
 import { Form, useLoaderData } from '@remix-run/react'
-import { LoaderArgs, redirect } from '@remix-run/server-runtime'
+import { LoaderFunctionArgs, redirect } from '@remix-run/server-runtime'
 
-export const loader = ({ request }: LoaderArgs) => {
+export const loader = ({ request }: LoaderFunctionArgs) => {
 	const cookies = request.headers.get('Cookie')
 
 	return {

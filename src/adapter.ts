@@ -1,7 +1,7 @@
 import type { AppLoadContext, ServerBuild } from '@remix-run/node'
 import {
-	createRequestHandler as createRemixRequestHandler,
 	createReadableStreamFromReadable,
+	createRequestHandler as createRemixRequestHandler,
 	writeReadableStreamToWritable,
 } from '@remix-run/node'
 import type * as koa from 'koa'
@@ -27,7 +27,7 @@ export type RequestHandlerBuilderArgs = {
 /**
  * Returns a request handler for koa that serves the response using Remix.
  *
- * @see hhttps://remix.run/docs/en/main/other-api/adapter
+ * @see https://remix.run/docs/en/main/other-api/adapter
  */
 export function createRequestHandler({
 	build,
@@ -36,7 +36,7 @@ export function createRequestHandler({
 }: RequestHandlerBuilderArgs): RequestHandler {
 	const handleRequest = createRemixRequestHandler(build, mode)
 
-	return async (ctx, next) => {
+	return async (ctx: koa.Context, next: koa.Next) => {
 		const request = createRemixRequest(ctx)
 		const loadContext = getLoadContext?.(ctx)
 

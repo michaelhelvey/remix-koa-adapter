@@ -53,10 +53,6 @@ specs for the adapter can be found in the unit tests, which are ported from the
 unit tests for `@remix-run/express`, which I've considered the canonical adapter
 implementation for the purpose of this project.
 
-## Authors
-
--   [Michael Helvey](https://michaelhelvey.dev)
-
 ## License
 
 [MIT](./LICENSE.md)

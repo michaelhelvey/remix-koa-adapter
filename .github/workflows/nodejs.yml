@@ -15,15 +15,15 @@ jobs:
 
         strategy:
             matrix:
-                node-version: [16, 18]
+                node-version: [16, 18, 20]
         steps:
-            - uses: actions/checkout@v3
-            - uses: pnpm/action-setup@v2.0.1
+            - uses: actions/checkout@v4
+            - uses: pnpm/action-setup@v3
               with:
                   version: 8
 
             - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v2
+              uses: actions/setup-node@v4
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: 'pnpm'
