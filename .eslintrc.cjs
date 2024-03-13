@@ -41,5 +41,12 @@ module.exports = {
 				...permissiveTypescriptRules,
 			},
 		},
+		{
+			files: ['**/playground/**'],
+			rules: {
+				'no-console': 'off',
+				...permissiveTypescriptRules,
+			},
+		},
 	],
 }

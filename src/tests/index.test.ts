@@ -1,12 +1,12 @@
 import { withApp } from '@michaelhelvey/microtest'
 import {
-	createRequestHandler as createRemixRequestHandler,
 	createReadableStreamFromReadable,
+	createRequestHandler as createRemixRequestHandler,
 	json,
 } from '@remix-run/node'
 import Koa from 'koa'
 import { Readable } from 'stream'
-import { createRemixHeaders, createRequestHandler } from '../index'
+import { createRemixHeaders, createRequestHandler } from '../index.js'
 
 vi.mock('@remix-run/node', async () => {
 	const actual = await import('@remix-run/node')

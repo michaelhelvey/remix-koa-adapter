@@ -1,4 +1,10 @@
 .eslintrc.*
 prettier.config.*
+vitest.config.ts
+dist
 
-playground
+# playground
+server.js
+remix.config.js
+public
+build
