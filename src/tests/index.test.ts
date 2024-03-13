@@ -1,8 +1,8 @@
 import { withApp } from '@michaelhelvey/microtest'
 import {
 	createRequestHandler as createRemixRequestHandler,
+	createReadableStreamFromReadable,
 	json,
-	Response as NodeResponse,
 } from '@remix-run/node'
 import Koa from 'koa'
 import { Readable } from 'stream'
@@ -66,7 +66,7 @@ describe('createRequestHandler', () => {
 	it('handles body as stream', async () => {
 		mockHandler.mockImplementation(() => async () => {
 			const stream = Readable.from('hello world')
-			return new NodeResponse(stream, {
+			return new Response(createReadableStreamFromReadable(stream), {
 				status: 200,
 			}) as unknown as Response
 		})
@@ -148,89 +148,45 @@ describe('createRequestHandler', () => {
 describe('koa createRemixHeaders', () => {
 	describe('creates fetch headers from koa headers', () => {
 		it('handles empty headers', () => {
-			expect(createRemixHeaders({})).toMatchInlineSnapshot(`
-				Headers {
-				  Symbol(query): [],
-				  Symbol(context): null,
-				}
-			`)
+			const headers = createRemixHeaders({})
+			expect(Object.fromEntries(headers.entries())).toMatchInlineSnapshot(
+				`{}`
+			)
 		})
 
 		it('handles simple headers', () => {
-			expect(createRemixHeaders({ 'x-foo': 'bar' }))
-				.toMatchInlineSnapshot(`
-				Headers {
-				  Symbol(query): [
-				    "x-foo",
-				    "bar",
-				  ],
-				  Symbol(context): null,
-				}
-			`)
+			const headers = createRemixHeaders({ 'x-foo': 'bar' })
+			expect(headers.get('x-foo')).toBe('bar')
 		})
 
 		it('handles multiple headers', () => {
-			expect(createRemixHeaders({ 'x-foo': 'bar', 'x-bar': 'baz' }))
-				.toMatchInlineSnapshot(`
-				Headers {
-				  Symbol(query): [
-				    "x-foo",
-				    "bar",
-				    "x-bar",
-				    "baz",
-				  ],
-				  Symbol(context): null,
-				}
-			`)
+			const headers = createRemixHeaders({
+				'x-foo': 'bar',
+				'x-bar': 'baz',
+			})
+			expect(headers.get('x-foo')).toBe('bar')
+			expect(headers.get('x-bar')).toBe('baz')
 		})
 
 		it('handles headers with multiple values', () => {
-			expect(createRemixHeaders({ 'x-foo': 'bar, baz' }))
-				.toMatchInlineSnapshot(`
-				Headers {
-				  Symbol(query): [
-				    "x-foo",
-				    "bar, baz",
-				  ],
-				  Symbol(context): null,
-				}
-			`)
-		})
-
-		it('handles headers with multiple values and multiple headers', () => {
-			expect(createRemixHeaders({ 'x-foo': 'bar, baz', 'x-bar': 'baz' }))
-				.toMatchInlineSnapshot(`
-				Headers {
-				  Symbol(query): [
-				    "x-foo",
-				    "bar, baz",
-				    "x-bar",
-				    "baz",
-				  ],
-				  Symbol(context): null,
-				}
-			`)
+			const headers = createRemixHeaders({
+				'x-foo': ['bar', 'baz'],
+				'x-bar': 'baz',
+			})
+			expect(headers.get('x-foo')).toEqual('bar, baz')
+			expect(headers.get('x-bar')).toBe('baz')
 		})
 
 		it('handles multiple set-cookie headers', () => {
-			expect(
-				createRemixHeaders({
-					'set-cookie': [
-						'__session=some_value; Path=/; Secure; HttpOnly; MaxAge=7200; SameSite=Lax',
-						'__other=some_other_value; Path=/; Secure; HttpOnly; MaxAge=3600; SameSite=Lax',
-					],
-				})
-			).toMatchInlineSnapshot(`
-				Headers {
-				  Symbol(query): [
-				    "set-cookie",
-				    "__session=some_value; Path=/; Secure; HttpOnly; MaxAge=7200; SameSite=Lax",
-				    "set-cookie",
-				    "__other=some_other_value; Path=/; Secure; HttpOnly; MaxAge=3600; SameSite=Lax",
-				  ],
-				  Symbol(context): null,
-				}
-			`)
+			const headers = createRemixHeaders({
+				'set-cookie': [
+					'__session=some_value; Path=/; Secure; HttpOnly; MaxAge=7200; SameSite=Lax',
+					'__other=some_other_value; Path=/; Secure; HttpOnly; Expires=Wed, 21 Oct 2015 07:28:00 GMT; SameSite=Lax',
+				],
+			})
+			expect(headers.get('set-cookie')).toEqual(
+				'__session=some_value; Path=/; Secure; HttpOnly; MaxAge=7200; SameSite=Lax, __other=some_other_value; Path=/; Secure; HttpOnly; Expires=Wed, 21 Oct 2015 07:28:00 GMT; SameSite=Lax'
+			)
 		})
 	})
 })
